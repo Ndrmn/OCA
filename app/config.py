@@ -8,6 +8,7 @@ class Config(object):
     SECRET_KEY = '0987654321'
     SQLALCHEMY_DATABASE_URI = "sqlite:///test.bd"
     SQLALCHEMY_TRACK_MODIFICATIONS = True
+    # CORS_HEADERS = 'Content-Type'
 
 
 class ProductionConfig(Config):

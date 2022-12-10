@@ -4,6 +4,8 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 
 app = Flask(__name__)
+# CORS(app)
+# cors = CORS(app, resources={r"*": {"origins": "*"}})
 app.config.from_object(
     DevelopConfig
 )  # or  app.config.from_object(ProductionConfig) if prod
