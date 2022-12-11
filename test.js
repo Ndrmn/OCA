@@ -1,7 +1,7 @@
 async function writeAnswers() {
-    let user = { user: 'test user2422', data:'some data' };
+    let user = { user: 'user3', data:'some data' };
 
-    let response = await fetch('http://77.120.190.159:5555/test', {
+    let response = await fetch('http://77.120.190.159:5555/api/test', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json;charset=utf-8' },
         body: JSON.stringify(user)

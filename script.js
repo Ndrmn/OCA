@@ -380,19 +380,6 @@ let formData = percentValA;
 	numValH = 0;
 	numValI = 0;
 	numValJ = 0;
-//Sending form to email
-
-	// async function formSend (e) {
-	// 	e.preventDefault();
-
-	// 	let response = await fetch('sendmail.php', {
-	// 		method: 'POST',
-	// 		body: formData;
-	// 	});
-	// 	if (response.ok) {
-	// 		let result = await response.json();
-	// 		alert(result.message);
-	// 		form.reset();
 	// 	} else {
 	// 		alert("Ошибка");
 	// 	}
@@ -400,11 +387,3 @@ let formData = percentValA;
 });
 
 
-//Error notification function
-var snackbar = document.querySelector('.snackbar');
-function error() {
-snackbar.style.display = "block";
-	setTimeout(function(){
-		snackbar.style.display = "none";
-	}, 2000);
-};

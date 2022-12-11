@@ -2,7 +2,7 @@ from app import client
 
 
 def test_test_get():
-    res = client.get('/test')
+    res = client.get('/api/test')
 
     assert res.status_code == 200
     assert len(res.get_json()) > 1
@@ -14,6 +14,6 @@ def test_test_post():
         'description': 'Pytest tutorial'
     }
 
-    res = client.post('/test', json=data)
+    res = client.post('/api/test', json=data)
 
     assert res.status_code == 200
