@@ -3,7 +3,7 @@
 let questions = [];
 let results = {
     user: 'test',
-    data: '0',
+    data: 'test',
 };
 
 //Generate question cards
@@ -62,7 +62,7 @@ async function postResults() {
     let response = await fetch('http://77.120.190.159:5555/api/test', {
         method: 'POST',
         headers: {
-            'Content-Type': 'text/plain;charset=UTF-8',
+            'Content-Type': 'application/json;charset=utf-8',
         },
         body: JSON.stringify(results),
     });

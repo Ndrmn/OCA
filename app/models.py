@@ -35,12 +35,22 @@ class Admin(db.Model):
 class User(db.Model):
     __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True, unique=True)
-    name = db.Column(db.String(200), nullable=False, unique=True)
+    name = db.Column(db.String(30), nullable=False)
+    surname = db.Column(db.String(30), nullable=False)
+    dateOfBirthday = db.Column(db.String(20), default="1970-01-01")
+    gender = db.Column(db.String(8), default="man")
+    phone = db.Column(db.String(20), default="")
+    email = db.Column(db.String(50), default="")
+    consent = db.Column(db.String(5), default="true")
 
-    def addUser(userName):
-        user = User(name=userName)
-        db.session.add(user)
-        db.session.commit()
+    def __init__(self, **kwargs):
+        self.name = kwargs.get('name')
+        self.surname = kwargs.get('surname')
+        self.dateOfBirthday = kwargs.get('dateOfBirthday')
+        self.gender = kwargs.get('gender')
+        self.phone = kwargs.get('phone')
+        self.email = kwargs.get('email')
+        self.consent = kwargs.get('consent')
 
 
 class Answer(db.Model):
