@@ -3,7 +3,7 @@ from flask import request, jsonify, Response
 from app import app, db
 from .test_data import questions
 from .models import Admin, User, Answer
-# from flask_cors import cross_origin
+from flask_jwt_extended import jwt_required, get_jwt_identity
 
 
 @app.route('/api/test', methods=['GET'])
@@ -12,7 +12,7 @@ def test():
 
 
 @app.route('/api/test', methods=["post"])
-def get_unswers():
+def set_unswers():
     data: dict = request.json
     user_name = data.get('user')
     if user_name:
@@ -45,11 +45,58 @@ def after_request(response: Response) -> Response:
 
 @app.route('/api/get_users')
 def get_users():
-    return [user.name for user in User.query.all()]
+    return [{'name': user.name, 'id': user.id} for user in User.query.all()]
+
+# !!!!!!!!!!
 
 
-@app.route('/api/get_answers/<user>')
-def get_answers(user):
-    user_id = User.query.filter(User.name == user).first().id
+@app.route('/api/user/<id_user>', methods=['DELETE'])
+def delete_user(id_user):
+    users = User.query.filter(User.id == id_user).all()
+    if len(users) == 0:
+        return jsonify({})
+    user_id = users[0].id
+    db.session.delete(User)
+    db.session.commit()
+    return jsonify({"deleted": f"{user_id}"})
+
+# !!!!!!!!!!
+
+
+@app.route('/api/get_answers/<id_user>')
+def get_answers(id_user):
+    users = User.query.filter(User.id == id_user).all()
+    if len(users) == 0:
+        return jsonify({})
+    user_id = users[0].id
     answers = Answer.query.filter(Answer.user_id == user_id).all()
-    return [{'test_data': answer.test_data, 'date_of_testing': answer.date_of_testing} for answer in answers]
+    return jsonify([{'test_data': answer.test_data, 'date_of_testing': str(answer.date_of_testing)} for answer in answers])
+
+
+@app.route('/register', methods=['POST'])
+def register():
+    print(request)
+    params = request.json
+    admin = Admin(**params)
+    db.session.add(admin)
+    db.session.commit()
+    token = admin.get_token()
+    return {'access_token': token}
+
+
+@app.route('/register', methods=['GET'])
+def register_info():
+    return jsonify({"info": "in post request send json whith name, password, email"})
+
+
+@app.route('/login', methods=['POST'])
+def login():
+    params = request.json
+    admin = Admin.authenticate(**params)
+    token = admin.get_token()
+    return {'access_token': token}
+
+
+@app.route('/login', methods=["GET"])
+def login_info():
+    return jsonify({"info": "in post request send json whith name, password"})

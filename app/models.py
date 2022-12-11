@@ -1,15 +1,35 @@
 # from flask_sqlalchemy import SQLAlchemy
 from app import db
-# from datetime import timedelta
+from datetime import timedelta
 from datetime import datetime
+from passlib.hash import bcrypt
+from flask_jwt_extended import create_access_token
 
 
 class Admin(db.Model):
     __tablename__ = "admin"
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(200), nullable=False, unique=True)
-    password = db.Column(db.String(200), nullable=False, unique=True)
-    email = db.Column(db.String(100), unique=True, nullable=False)
+    password = db.Column(db.String(200), nullable=False)
+    email = db.Column(db.String(100),  nullable=False)
+
+    def __init__(self, **kwargs):
+        self.name = kwargs.get('name')
+        self.email = kwargs.get('email')
+        self.password = bcrypt.hash(kwargs.get('password'))
+
+    def get_token(self, expire_time=24):
+        expire_delta = timedelta(expire_time)
+        token = create_access_token(
+            identity=self.id, expires_delta=expire_delta)
+        return token
+
+    @classmethod
+    def authenticate(cls, **kwargs):
+        admin = cls.query.filter(cls.name == kwargs.get('name')).one()
+        if not bcrypt.verify(kwargs.get('password'), admin.password):
+            raise Exception('No user with this password')
+        return admin
 
 
 class User(db.Model):
