@@ -38,7 +38,7 @@ class User(db.Model):
     name = db.Column(db.String(30), nullable=False)
     surname = db.Column(db.String(30), nullable=False)
     dateOfBirthday = db.Column(db.String(20), default="1970-01-01")
-    gender = db.Column(db.String(8), default="man")
+    gender = db.Column(db.String(8), default="male")
     phone = db.Column(db.String(20), default="")
     email = db.Column(db.String(50), default="")
     consent = db.Column(db.String(5), default="true")

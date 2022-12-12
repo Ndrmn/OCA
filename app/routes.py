@@ -7,6 +7,22 @@ from flask_jwt_extended import jwt_required, get_jwt_identity
 import json
 
 
+def form_data_parser(data):
+    data_list = data.decode('utf-8').split('\r\n')
+    user_data = dict()
+    user_answers = list()
+    for data_el in data_list:
+        if len(data_el):
+            if data_el.find('question') == 0:
+                user_answers.append(data_el.split('=')[1])
+            else:
+                key, value = data_el.split('=')
+                if len(key):
+                    user_data[key] = value
+
+    return {'user': user_data, 'data': user_answers}
+
+
 @app.route('/api/test', methods=['GET'])
 def test():
     return questions
@@ -14,9 +30,15 @@ def test():
 
 @app.route('/api/test', methods=["POST", "OPTIONS"])
 def set_unswers():
-    print(request.form)
-    data: dict = json.loads(request.data)
-    # data: dict = request.json
+    try:
+        # print(request.data)
+        data: dict = form_data_parser(request.data)
+        # print(data)
+    except:
+        try:
+            data: dict = json.loads(request.data)
+        except:
+            return "no match data"
     user_params = data.get('user')
     if user_params:
         user = User.query.where((User.name == user_params.get(
@@ -33,12 +55,12 @@ def set_unswers():
             Answer.addAnswer(user=user, test_data=test_result_str)
 
         return "get data"
-    return "not math data"
+    return '"not match data: waiting {user:user_data, data:answers_arr}"'
 
 
 @app.route('/')
 def index():
-    return """get_answers  GET      /api/get_answers/<user>
+    return """get_answers  GET      /api/get_answers/<id_user>
     get_unswers  POST     /api/test
     get_users    GET      /api/get_users
     index        GET      /
@@ -78,7 +100,7 @@ def get_answers(id_user):
 
 @app.route('/register', methods=['POST'])
 def register():
-    print(request)
+    # print(request)
     params = request.json
     admin = Admin(**params)
     db.session.add(admin)
