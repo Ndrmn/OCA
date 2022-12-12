@@ -1,0 +1,195 @@
+<!Doctype html>
+<html lang="ru">
+	<head>
+		<title>Оксфордский тест анализа личности</title>
+		
+		<link rel="stylesheet" href="source/css/style.css" />
+		
+		<meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
+		
+		<link rel="preconnect" href="https://fonts.googleapis.com">
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+		<link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;700&display=swap" rel="stylesheet">
+		
+		<link rel="shortcut icon" href="img/favicon.ico" type="image/x-icon">
+		
+		<meta name="viewport" content="width=device-width">
+	</head>
+	<body>
+	<div class="site">
+<!--Header----------------------------------------->
+		<div class="header shadow">
+			<div class="header_container container">
+				<div class="header__body">
+					<div class="header__header">
+						<p>
+							Оксфордский тест анализа личности
+						</p>
+					</div>
+					<div class="header__text">
+						<p>
+							Oxford Capacity Analysis (OCA)
+						</p>
+					</div>
+				</div>
+			</div>
+		</div>
+<!--Rules------------------------------------------>
+		<div class="rules">
+			<div class="rules__container container">
+				<div class="rules__body shadow">
+					<div class="rules__header">
+						<p>
+							Инструкция:
+						</p>
+					</div>
+					<div class="rules__paragraphs">
+						<ul class="rules__list">
+							<li>Отвечая на вопросы теста, не спрашивайте других, как они ответили, или как лучше ответить вам. Не обращайтесь ни к кому за помощью.</li>
+							<li>Не задерживайтесь долго на одном вопросе, отвечайте на него сразу, как только вы его поняли и переходите к следующему.</li>
+							<li>Отвечайте на каждый вопрос так, как вы чувствуете будет правильно СЕЙЧАС, а не в вашем прошлом.</li>
+							<li>Точность теста зависит от вашей честности в ответах на вопросы.</li>
+							<li>На каждый вопрос можно ответить одним из трёх способов, отметив соответствующий кружочек.</li>
+							<li><b>Важно! Тест разработан для людей возрастом старше 14 лет. Не пытайтесь проходить этот тест, если Вам нет 14, поскольку его результаты будут не верными.</b></li>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+<!--Form------------------------------------------->
+	<form action="http://77.120.190.159:5555/api/test" name="mainForm"  method="post" enctype="text/plain">
+		<div class="form">
+			<div class="form__container container">
+				<div class="form__body shadow">
+					<div class="form__header">
+						<p>Заполните форму:</p>
+					</div>
+					<div class="form__name">
+						<p class="w200">
+							Имя:
+						</p>
+						<input class="w200 inputs" type="text" name="name" value="Андрей" oninput="if(/[^a-zA-ZА-Яа-яЁё]/.test(this.value)){let Selection = this.selectionStart-1;this.value=this.value.replace(/[^a-zA-ZА-Яа-яЁё]/g,'');this.setSelectionRange(Selection, Selection);}"/>
+					</div>
+					<div class="form__surname">
+						<p class="w200">
+							Фамилия:
+						</p>
+						<input class="w200 inputs" type="text" name="surname" value="Култышев" oninput="if(/[^a-zA-ZА-Яа-яЁё]/.test(this.value)){let Selection = this.selectionStart-1;this.value=this.value.replace(/[^a-zA-ZА-Яа-яЁё]/g,'');this.setSelectionRange(Selection, Selection);}"/>
+					</div>
+					<div class="form__dateOfBirdth">
+						<p class="w200">
+							Дата рождения:
+						</p>
+						<input class="w200 dateOfBirth inputs" value="2000-01-01" type="date" name="dateofbirth" />
+					</div>
+					<div class="form__gender">
+						<p class="w200">
+							Пол:
+						</p>
+						<p class="w200 alignRadio">
+							<span><input type="radio" name="gender" value="man" checked/> -мужской</span>
+							<span><input type="radio" name="gender" value="woman" /> -женский</span>					
+						</p>				
+					</div>
+					<div class="form__tel">
+						<p class="w200">
+							Номер телефона:
+						</p>
+						<input class="w200 inputs" type="tel" name="phonenumber" value="+380500000000" oninput="if(/[^0-9()-+]/.test(this.value)){let Selection = this.selectionStart-1;this.value=this.value.replace(/[^0-9()-+]/g,'');this.setSelectionRange(Selection, Selection);}"/>
+					</div>
+					<div class="form__email">
+						<p class="w200">
+							E-mail:
+						</p>
+						<input class="w200 inputs" type="email" name="email" value="test@test.test" oninput="if(/[^a-zA-Z0-9-@.]/.test(this.value)){let Selection = this.selectionStart-1;this.value=this.value.replace(/[^a-zA-Z0-9-@.]/g,'');this.setSelectionRange(Selection, Selection);}"/>
+					</div>	
+					<div class="form__checked">
+						<input class="check" type="checkbox" name="checkbox" checked required />
+						<p>
+							- согласие на сбор, хранение и обработку персональных данных
+						</p>
+					</div>												
+				</div>
+			</div>
+		</div>
+<!--Start------------------------------------------>
+		<div class="startTest">
+			<div class="startTest__container container">
+				<div class="startTest__body shadow">
+					<p>
+						Начало теста:
+					</p>
+				</div>
+			</div>
+		</div>
+<!--Questions-------------------------------------->
+		<div class="questions">
+
+
+
+<!-- 			<div class="questions__container container">
+				<div class="questions__body shadow">
+					<div class="questions__question">
+						<div class="questions__qstn">
+							<div class="questions__name">
+								<p>
+									Текст вопроса
+								</p>
+							</div>
+							<div class="questions__variants">
+								<div class="questions__yes">
+									<input type="radio" name="q1"/>
+									<p>Да</p>
+								</div>
+								<div class="questions__dontKnow">
+									<input type="radio" name="q1"/>
+									<p>Не знаю</p>
+								</div>
+								<div class="questions__no">
+									<input type="radio" name="q1"/>
+									<p>Нет</p>
+								</div>
+							</div>
+						</div>
+						<div class="questions__number">
+							<p>001</p>
+						</div>
+					</div>
+				</div>
+			</div> -->
+
+
+
+
+					<!--200_cards_ends------------------>
+				</div>
+			</div>
+		</div>
+<!--Submit----------------------------------------->
+		<div class="submit">
+			<div class="submit__container container">
+		 		<div class="submit__body">
+					<input class="submit__button shadow btn" type="submit" value="Отправить"></input>
+				</div>
+			</div>
+		</div>
+	</form>
+<!--Footer----------------------------------------->
+		<div class="footer">
+			<div class="footer__container container">
+				<div class="footer__body">
+					<div class="footer__text">
+						<p>
+							© "OCA" является товарным знаком, принадлежащим Центру религиозных технологий, Лос-Анджелес, Калифорния, США. Этот знак имеет лицензию на использование Международной церковью Саентологии и её доверенными организациями и зарегистрирован во многих странах мира.
+						</p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+<!--ErrorSnackBar--------------------------------------->
+	<div class="snackbar">Заполните пропущеные поля</div>	
+<!--Script----------------------------------------->
+		<script src="source/js/script.js"></script>
+	</body>
+</html>
