@@ -3,6 +3,9 @@
 	<head>
 		<title>Оксфордский тест анализа личности</title>
 		
+		<!-- Bootstrap -->
+		<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+	
 		<link rel="stylesheet" href="source/css/style.css" />
 		
 		<meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
@@ -87,8 +90,8 @@
 							Пол:
 						</p>
 						<p class="w200 alignRadio">
-							<span><input type="radio" name="gender" value="man" checked/> -мужской</span>
-							<span><input type="radio" name="gender" value="woman" /> -женский</span>					
+							<span><input type="radio" name="gender" value="male" checked/> -мужской</span>
+							<span><input type="radio" name="gender" value="female" /> -женский</span>					
 						</p>				
 					</div>
 					<div class="form__tel">
@@ -104,7 +107,7 @@
 						<input class="w200 inputs" type="email" name="email" value="test@test.test" oninput="if(/[^a-zA-Z0-9-@.]/.test(this.value)){let Selection = this.selectionStart-1;this.value=this.value.replace(/[^a-zA-Z0-9-@.]/g,'');this.setSelectionRange(Selection, Selection);}"/>
 					</div>	
 					<div class="form__checked">
-						<input class="check" type="checkbox" name="checkbox" checked required />
+						<input class="check" type="checkbox" name="consent" checked required />
 						<p>
 							- согласие на сбор, хранение и обработку персональных данных
 						</p>
@@ -188,7 +191,16 @@
 		</div>
 	</div>
 <!--ErrorSnackBar--------------------------------------->
-	<div class="snackbar">Заполните пропущеные поля</div>	
+	<div class="snackbar">Заполните пропущеные поля</div>
+<!--Loading--------------------------------------->
+	<div class="loadingQuestions">
+		<div class="loadAttention">Загружаем вопросы...</div>
+		<div class="d-flex justify-content-center">
+			<div class="spinner-border" role="status">
+			  <span class="visually-hidden">Loading...</span>
+			</div>
+		</div>
+	</div>
 <!--Script----------------------------------------->
 		<script src="source/js/script.js"></script>
 	</body>

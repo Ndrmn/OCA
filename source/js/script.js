@@ -31,6 +31,8 @@ async function loadQuestions () {
 
   questions = await response.json();
 
+  hideLodaingCircle();
+
   // console.log(questions);
 
 	const cadrs = document.querySelector('.questions');
@@ -50,15 +52,15 @@ async function loadQuestions () {
 							</div>
 							<div class="questions__variants">
 								<div class="questions__yes">
-										<input type="radio" name="q${i+1}" value="1"/>
+										<input type="radio" name="question${i+1}" value="1"/>
 									<p>Да</p>
 									</div>
 									<div class="questions__dontKnow">
-										<input type="radio" name="q${i+1}" value="0"/>
+										<input type="radio" name="question${i+1}" value="0"/>
 										<p>Не знаю</p>
 									</div>
 									<div class="questions__no">
-										<input type="radio" name="q${i+1}" value="-1" checked/>
+										<input type="radio" name="question${i+1}" value="-1" checked/>
 										<p>Нет</p>
 									</div>
 								</div>
@@ -156,7 +158,7 @@ submitForm.addEventListener("submit", function (event) {
 
 
 for (let n=1;n<=200;n++){
-	let questionsCheck = document.querySelectorAll(`input[name="q${n}"]`)
+	let questionsCheck = document.querySelectorAll(`input[name="question${n}"]`)
 	if (questionsCheck[0].checked == false && questionsCheck[1].checked == false && questionsCheck[2].checked == false) {
 			let question = document.querySelector(`.q${n}`)
 				question.classList.add('red');
@@ -229,3 +231,8 @@ function error() {
 	// submitBtn.addEventListener('click', function() {
 	// 		postResults();
 	// });
+
+function hideLodaingCircle() {
+	const circle = document.querySelector('.loadingQuestions');
+	circle.classList.add('hideLoadCircle');
+}
