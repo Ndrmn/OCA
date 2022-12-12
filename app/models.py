@@ -41,7 +41,7 @@ class User(db.Model):
     gender = db.Column(db.String(8), default="male")
     phone = db.Column(db.String(20), default="")
     email = db.Column(db.String(50), default="")
-    consent = db.Column(db.String(5), default="true")
+    consent = db.Column(db.String(5), default="on")
 
     def __init__(self, **kwargs):
         self.name = kwargs.get('name')
