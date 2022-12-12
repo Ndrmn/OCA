@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from flask import request, jsonify, Response
 from app import app, db
-from .test_data import questions
+from .testing_logic import questions, test_results
 from .models import Admin, User, Answer
 from flask_jwt_extended import jwt_required, get_jwt_identity
 import json
@@ -29,11 +29,9 @@ def test():
 
 
 @app.route('/api/test', methods=["POST", "OPTIONS"])
-def set_unswers():
+def set_answers():
     try:
-        # print(request.data)
         data: dict = form_data_parser(request.data)
-        # print(data)
     except:
         try:
             data: dict = json.loads(request.data)
@@ -60,12 +58,21 @@ def set_unswers():
 
 @app.route('/')
 def index():
-    return """get_answers  GET      /api/get_answers/<id_user>
-    get_unswers  POST     /api/test
-    get_users    GET      /api/get_users
-    index        GET      /
-    static       GET      /static/<path:filename>
-    test         GET      /api/test"""
+    url_of_api = """
+    <p>Endpoint       Methods  Rule</p>
+    <br>delete_user    DELETE   /api/user/<id_user>
+    <br>get_answers    GET      /api/get_answers/<id_user>
+    <br>get_users      GET      /api/get_users
+    <br>index          GET      /
+    <br>login          POST     /login
+    <br>login_info     GET      /login
+    <br>register       POST     /register
+    <br>register_info  GET      /register
+    <br>set_unswers    POST     /api/test
+    <br>static         GET      /static/<path:filename>
+    <br>test           GET      /api/test
+    """
+    return url_of_api
 
 
 @app.route('/api/get_users')
@@ -84,7 +91,6 @@ def delete_user(id_user):
     db.session.delete(User)
     db.session.commit()
     return jsonify({"deleted": f"{user_id}"})
-
 # !!!!!!!!!!
 
 
@@ -92,21 +98,33 @@ def delete_user(id_user):
 def get_answers(id_user):
     users = User.query.filter(User.id == id_user).all()
     if len(users) == 0:
-        return jsonify({})
+        return {"no user": f"{id_user}"}
     user_id = users[0].id
     answers = Answer.query.filter(Answer.user_id == user_id).all()
-    return jsonify([{'test_data': answer.test_data, 'date_of_testing': str(answer.date_of_testing)} for answer in answers])
+    return jsonify([{'id of test result ': answer.id, 'test_data': answer.test_data, 'date_of_testing': str(answer.date_of_testing)} for answer in answers])
+
+# !!!!!!!!!!!!!
+@app.route('/api/get_test_result/<id>')
+def get_test_result(id):
+    answer = Answer.query.filter(Answer.id == id).all()
+    if len(answer):
+        return test_results()
 
 
 @app.route('/register', methods=['POST'])
 def register():
-    # print(request)
-    params = request.json
-    admin = Admin(**params)
-    db.session.add(admin)
-    db.session.commit()
-    token = admin.get_token()
-    return {'access_token': token}
+    try:
+        # print(request)
+        params = request.json
+        if Admin.query.filter(Admin.name == params.get('name')).all():
+            return {"user whith this name is present": "please choose another name for user"}
+        admin = Admin(**params)
+        db.session.add(admin)
+        db.session.commit()
+        token = admin.get_token()
+        return {'access_token': token}
+    except:
+        return {"error": "bad request"}
 
 
 @app.route('/register', methods=['GET'])
@@ -116,10 +134,13 @@ def register_info():
 
 @app.route('/login', methods=['POST'])
 def login():
-    params = request.json
-    admin = Admin.authenticate(**params)
-    token = admin.get_token()
-    return {'access_token': token}
+    try:
+        params = request.json
+        admin = Admin.authenticate(**params)
+        token = admin.get_token()
+        return {'access_token': token}
+    except:
+        return {"error": "bad request"}
 
 
 @app.route('/login', methods=["GET"])
