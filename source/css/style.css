@@ -446,6 +446,12 @@ input {
   display: none;
 }
 
+.loginArea {
+  max-width: 400px;
+  padding: 50px 10px;
+  margin: 0 auto;
+}
+
 @media (max-width: 1025px) {
   /* big landscape tablets, laptops, and desktops */
 }
