@@ -47,10 +47,7 @@ def set_answers():
             db.session.commit()
             user = User.query.where((User.name == user_params.get(
                 'name')) & (User.surname == user_params.get('surname'))).first()
-        test_result_list = data.get('data')
-        if test_result_list:
-            test_result_str = ','.join([str(i) for i in test_result_list])
-            Answer.addAnswer(user=user, test_data=test_result_str)
+        Answer.addAnswer(user=user, test_data=','.join(data.get('data')))
 
         return "get data"
     return '"not match data: waiting {user:user_data, data:answers_arr}"'
@@ -79,9 +76,8 @@ def index():
 def get_users():
     return [{'id': user.id, "name": user.name, "surname": user.surname, 'gender': user.gender, 'email': user.email} for user in User.query.all()]
 
+
 # !!!!!!!!!!
-
-
 @app.route('/api/user/<id_user>', methods=['DELETE'])
 def delete_user(id_user):
     users = User.query.filter(User.id == id_user).all()
@@ -103,15 +99,31 @@ def get_answers(id_user):
     answers = Answer.query.filter(Answer.user_id == user_id).all()
     return jsonify([{'id of test result ': answer.id, 'test_data': answer.test_data, 'date_of_testing': str(answer.date_of_testing)} for answer in answers])
 
-# !!!!!!!!!!!!!
+
+@app.route('/api/get_test_graph/<id>')
+def get_test_graph(id):
+    answer = Answer.query.filter(Answer.id == id).all()
+    if len(answer):
+        full_answer = db.session.query(Answer, User).select_from(
+            Answer).join(User).filter(Answer.id == id).all()
+        return test_results(age=14, gender=full_answer[0][1].gender, input_answers_str=full_answer[0][0].test_data)
+        # age!
+
+    return {}
+
+
 @app.route('/api/get_test_result/<id>')
 def get_test_result(id):
     answer = Answer.query.filter(Answer.id == id).all()
     if len(answer):
-        return test_results()
+        full_answer = db.session.query(Answer, User).select_from(
+            Answer).join(User).filter(Answer.id == id).all()
+        return test_results(age=14, gender=full_answer[0][1].gender, input_answers_str=full_answer[0][0].test_data)
+        # age!
+    return {}
 
 
-@app.route('/register', methods=['POST'])
+@ app.route('/register', methods=['POST'])
 def register():
     try:
         # print(request)
@@ -127,12 +139,12 @@ def register():
         return {"error": "bad request"}
 
 
-@app.route('/register', methods=['GET'])
+@ app.route('/register', methods=['GET'])
 def register_info():
     return jsonify({"info": "in post request send json whith name, password, email"})
 
 
-@app.route('/login', methods=['POST'])
+@ app.route('/login', methods=['POST'])
 def login():
     try:
         params = request.json
@@ -143,12 +155,12 @@ def login():
         return {"error": "bad request"}
 
 
-@app.route('/login', methods=["GET"])
+@ app.route('/login', methods=["GET"])
 def login_info():
     return jsonify({"info": "in post request send json whith name, password"})
 
 
-@app.after_request
+@ app.after_request
 def after_request(response: Response) -> Response:
     response.access_control_allow_origin = "*"
     response.headers.add('Access-Control-Allow-Headers',
