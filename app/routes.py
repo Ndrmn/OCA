@@ -114,7 +114,7 @@ def get_test_graph(id):
             age=14, gender=full_answer[0][1].gender, input_answers_str=full_answer[0][0].test_data)
         # age!
         fig = render_graph(test_data=test_results_data.get(
-            'allPercents'), answer197=test_results_data.get('anwser197'), answer22=test_results_data.get('answer22'), notSureFlag=test_results_data.get('notSureFlag'))
+            'allPercents'), answer197=test_results_data.get('answer197'), answer22=test_results_data.get('answer22'), notSureFlag=test_results_data.get('notSureFlag'))
 
         buf = io.BytesIO()
         fig.savefig(buf, format='png')
@@ -125,6 +125,7 @@ def get_test_graph(id):
         html = '<img src = "%s"/>' % uri
 
         return html
+    return {}
 
 
 @app.route('/api/get_test_result/<id>')

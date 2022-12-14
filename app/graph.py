@@ -4,7 +4,6 @@ import matplotlib.pyplot as plt
 
 
 def render_graph(test_data=["-60", "-84", "-98", "20", "-72", "10", "-36", "-28", "-94", "-80"], answer197=2, answer22=2, notSureFlag='false'):
-    # print(answer197,answer22)
     matplotlib.use('AGG')
     plt.clf()
     test_data = [int(x) for x in test_data]

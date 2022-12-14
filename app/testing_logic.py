@@ -203,16 +203,9 @@ questions = [
     "Считаете ли вы, что у вас много сердечных друзей?"]
 
 def test_results(age=14,gender='male',input_answers_str=""):
-    print(input_answers_str)
-    print(type(input_answers_str))
     if len(input_answers_str.split(','))!=200:
         input_answers=[random.randrange(3) for _ in range(200)]
     else:
-        for ll in input_answers_str.split(','):
-            try:
-                i=int(ll)+1
-            except:
-                print(ll,type(ll))
         input_answers=[int(ll)+1 for ll in input_answers_str.split(',')]
 
     # //Additional checks
