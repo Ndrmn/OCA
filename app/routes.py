@@ -1,10 +1,14 @@
 # -*- coding: utf-8 -*-
-from flask import request, jsonify, Response
+from flask import request, jsonify, Response, send_file
+import io
+import urllib
+import base64
 from app import app, db
 from .testing_logic import questions, test_results
 from .models import Admin, User, Answer
 from flask_jwt_extended import jwt_required, get_jwt_identity
 import json
+from .graph import render_graph
 
 
 def form_data_parser(data):
@@ -106,10 +110,21 @@ def get_test_graph(id):
     if len(answer):
         full_answer = db.session.query(Answer, User).select_from(
             Answer).join(User).filter(Answer.id == id).all()
-        return test_results(age=14, gender=full_answer[0][1].gender, input_answers_str=full_answer[0][0].test_data)
+        test_results_data = test_results(
+            age=14, gender=full_answer[0][1].gender, input_answers_str=full_answer[0][0].test_data)
         # age!
+        fig = render_graph(test_data=test_results_data.get(
+            'allPercents'), answer197=test_results_data.get('anwser197'), answer22=test_results_data.get('answer22'), notSureFlag=test_results_data.get('notSureFlag'))
 
-    return {}
+        buf = io.BytesIO()
+        fig.savefig(buf, format='png')
+        buf.seek(0)
+        string = base64.b64encode(buf.read())
+
+        uri = 'data:image/png;base64,' + urllib.parse.quote(string)
+        html = '<img src = "%s"/>' % uri
+
+        return html
 
 
 @app.route('/api/get_test_result/<id>')
