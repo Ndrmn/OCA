@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from flask import request, jsonify, Response, send_file
+import flask
 import io
 import urllib
 import base64
@@ -73,7 +74,9 @@ def index():
     <br>static         GET      /static/<path:filename>
     <br>test           GET      /api/test
     """
-    return url_of_api
+
+    # return url_of_api
+    return flask.render_template('/index.html')
 
 
 @app.route('/api/get_users')
