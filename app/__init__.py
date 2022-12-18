@@ -11,7 +11,7 @@ app.config.from_object(
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 client = app.test_client()
-jwt=JWTManager(app)
+jwt = JWTManager(app)
 with app.app_context():
     from .commands import *
 

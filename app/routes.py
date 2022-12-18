@@ -29,6 +29,7 @@ def form_data_parser(data):
 
 
 @app.route('/api/test', methods=['GET'])
+# @jwt_required()
 def test():
     return questions
 
@@ -161,6 +162,12 @@ def register():
 @ app.route('/register', methods=['GET'])
 def register_info():
     return jsonify({"info": "in post request send json whith name, password, email"})
+
+
+@app.route('/test_auth_api')
+@jwt_required()
+def test_auth_api():
+    return {'you are logged succesfulli': 'ok'}
 
 
 @ app.route('/login', methods=['POST'])
