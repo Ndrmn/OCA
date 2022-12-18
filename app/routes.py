@@ -6,10 +6,11 @@ import urllib
 import base64
 from app import app, db
 from .testing_logic import questions, test_results
-from .models import Admin, User, Answer
+from .models import Admin, User
 from flask_jwt_extended import jwt_required, get_jwt_identity
 import json
 from .graph import render_graph
+import datetime
 
 
 def form_data_parser(data):
@@ -24,8 +25,9 @@ def form_data_parser(data):
                 key, value = data_el.split('=')
                 if len(key):
                     user_data[key] = value
+    user_data['test_data'] = ','.join(user_answers)
 
-    return {'user': user_data, 'data': user_answers}
+    return user_data
 
 
 @app.route('/api/test', methods=['GET'])
@@ -43,80 +45,86 @@ def set_answers():
             data: dict = json.loads(request.data)
         except:
             return "no match data"
-    user_params = data.get('user')
-    if user_params:
-        user = User.query.where((User.name == user_params.get(
-            'name')) & (User.surname == user_params.get('surname'))).first()
-        if not user:
-            user = User(**user_params)
-            db.session.add(user)
-            db.session.commit()
-            user = User.query.where((User.name == user_params.get(
-                'name')) & (User.surname == user_params.get('surname'))).first()
-        Answer.addAnswer(user=user, test_data=','.join(data.get('data')))
+    # andrey stup
+    user = User(**data)
+    try:
+        db.session.add(user)
+        db.session.commit()
+    except:
+        return "no match data"
+    # andrey stup
+    # user_params = data.get('user')
+    # if user_params:
 
-        return "get data"
-    return '"not match data: waiting {user:user_data, data:answers_arr}"'
+    # user = User.query.where((User.name == user_params.get(
+    # 'name')) & (User.surname == user_params.get('surname'))).first()
+    # if not user:
+    # user = User(**user_params)
+    # db.session.add(user)
+    # db.session.commit()
+    # user = User.query.where((User.name == user_params.get(
+    # 'name')) & (User.surname == user_params.get('surname'))).first()
+    # Answer.addAnswer(user=user, test_data=','.join(data.get('data')))
+
+    # return "get data"
+    # return '"not match data: waiting {user:user_data, data:answers_arr}"'
+    return "get data"
 
 
 @app.route('/')
 def index():
-    url_of_api = """
-    <p>Endpoint       Methods  Rule</p>
-    <br>delete_user    DELETE   /api/user/<id_user>
-    <br>get_answers    GET      /api/get_answers/<id_user>
-    <br>get_users      GET      /api/get_users
-    <br>index          GET      /
-    <br>login          POST     /login
-    <br>login_info     GET      /login
-    <br>register       POST     /register
-    <br>register_info  GET      /register
-    <br>set_unswers    POST     /api/test
-    <br>static         GET      /static/<path:filename>
-    <br>test           GET      /api/test
-    """
-
-    # return url_of_api
     return flask.render_template('/index.html')
 
 
 @app.route('/api/get_users')
 def get_users():
-    return [{'id': user.id, "name": user.name, "surname": user.surname, 'gender': user.gender, 'email': user.email} for user in User.query.all()]
+    result = []
+
+    for user in User.query.all():
+
+        # user_id = user.id
+        # answers_from_user = Answer.query.filter(
+        # Answer.user_id == user_id).all()
+        answers = []
+        # for answer in answers_from_user:
+
+        # answers.append({'id of test graph': answer.id,
+        #    'date_of_testing': str(answer.date_of_testing)})
+
+        user_data = {'id': user.id, "name": user.name, "surname": user.surname, 'gender': user.gender, 'email': user.email,
+                     "dateofbirth": user.dateofbirth, "phone": user.phone, "date_of_testing": user.date_of_testing, "test_data": user.test_data, 'answers': answers}
+
+        result.append(user_data)
+
+    return result
 
 
-# !!!!!!!!!!
-@app.route('/api/user/<id_user>', methods=['DELETE'])
-def delete_user(id_user):
-    users = User.query.filter(User.id == id_user).all()
-    if len(users) == 0:
-        return jsonify({})
-    user_id = users[0].id
-    db.session.delete(User)
-    db.session.commit()
-    return jsonify({"deleted": f"{user_id}"})
-# !!!!!!!!!!
+# @ app.route('/api/get_answers/<id_user>')
+# def get_answers(id_user):
+    # users = User.query.filter(User.id == id_user).all()
+    # if len(users) == 0:
+    # return {"no user": f"{id_user}"}
+    # user_id = users[0].id
+    # answers = Answer.query.filter(Answer.user_id == user_id).all()
+    # return jsonify([{'id of test result ': answer.id, 'test_data': answer.test_data, 'date_of_testing': str(answer.date_of_testing)} for answer in answers])
 
 
-@app.route('/api/get_answers/<id_user>')
-def get_answers(id_user):
-    users = User.query.filter(User.id == id_user).all()
-    if len(users) == 0:
-        return {"no user": f"{id_user}"}
-    user_id = users[0].id
-    answers = Answer.query.filter(Answer.user_id == user_id).all()
-    return jsonify([{'id of test result ': answer.id, 'test_data': answer.test_data, 'date_of_testing': str(answer.date_of_testing)} for answer in answers])
-
-
-@app.route('/api/get_test_graph/<id>')
+@ app.route('/api/get_test_graph/<id>')
 def get_test_graph(id):
-    answer = Answer.query.filter(Answer.id == id).all()
-    if len(answer):
-        full_answer = db.session.query(Answer, User).select_from(
-            Answer).join(User).filter(Answer.id == id).all()
+    user = User.query.filter(User.id == id).all()
+    if len(user):
+
+        # full_answer = db.session.query(Answer, User).select_from(
+        # Answer).join(User).filter(Answer.id == id).all()
+        # test_results_data = test_results( age=14, gender=full_answer[0][1].gender, input_answers_str=full_answer[0][0].test_data)
+        date_of_bitth = datetime.datetime.strptime(
+            user[0].dateofbirth, "%Y-%m-%d").date()
+        date_of_testing = user[0].date_of_testing
+        age = date_of_testing.year - date_of_bitth.year
+        if date_of_testing.month < date_of_bitth.month or (date_of_testing.month == date_of_bitth.month and date_of_testing.day < date_of_bitth.day):
+            age -= 1
         test_results_data = test_results(
-            age=14, gender=full_answer[0][1].gender, input_answers_str=full_answer[0][0].test_data)
-        # age!
+            age=age, gender=user[0].gender, input_answers_str=user[0].test_data)
         fig = render_graph(test_data=test_results_data.get(
             'allPercents'), answer197=test_results_data.get('answer197'), answer22=test_results_data.get('answer22'), notSureFlag=test_results_data.get('notSureFlag'))
 
@@ -132,15 +140,15 @@ def get_test_graph(id):
     return {}
 
 
-@app.route('/api/get_test_result/<id>')
-def get_test_result(id):
-    answer = Answer.query.filter(Answer.id == id).all()
-    if len(answer):
-        full_answer = db.session.query(Answer, User).select_from(
-            Answer).join(User).filter(Answer.id == id).all()
-        return test_results(age=14, gender=full_answer[0][1].gender, input_answers_str=full_answer[0][0].test_data)
-        # age!
-    return {}
+# @ app.route('/api/get_test_result/<id>')
+# def get_test_result(id):
+    # answer = Answer.query.filter(Answer.id == id).all()
+    # if len(answer):
+    # full_answer = db.session.query(Answer, User).select_from(
+    # Answer).join(User).filter(Answer.id == id).all()
+    # return test_results(age=14, gender=full_answer[0][1].gender, input_answers_str=full_answer[0][0].test_data)
+    # age!
+    # return {}
 
 
 @ app.route('/register', methods=['POST'])
@@ -154,18 +162,18 @@ def register():
         db.session.add(admin)
         db.session.commit()
         token = admin.get_token()
-        return {'access_token': token}
+        return {'access_token': token, 'token_live_date': datetime.datetime.now() + datetime.timedelta(hours=24)}
     except:
         return {"error": "bad request"}
 
 
-@ app.route('/register', methods=['GET'])
-def register_info():
-    return jsonify({"info": "in post request send json whith name, password, email"})
+# @ app.route('/register', methods=['GET'])
+# def register_info():
+    # return jsonify({"info": "in post request send json whith name, password, email"})
 
 
-@app.route('/test_auth_api')
-@jwt_required()
+@ app.route('/test_auth_api', methods=['POST'])
+@ jwt_required()
 def test_auth_api():
     return {'you are logged succesfulli': 'ok'}
 
@@ -176,14 +184,14 @@ def login():
         params = request.json
         admin = Admin.authenticate(**params)
         token = admin.get_token()
-        return {'access_token': token}
+        return {'access_token': token, 'token_live_date': datetime.datetime.now() + datetime.timedelta(hours=24)}
     except:
         return {"error": "bad request"}
 
 
-@ app.route('/login', methods=["GET"])
-def login_info():
-    return jsonify({"info": "in post request send json whith name, password"})
+# @ app.route('/login', methods=["GET"])
+# def login_info():
+    # return jsonify({"info": "in post request send json whith name, password"})
 
 
 @ app.after_request
