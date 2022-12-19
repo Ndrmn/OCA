@@ -73,6 +73,7 @@ h1, h2, h3, h4, h5, h6 {
 /*-----------------*/
 body {
   font-family: "Noto Sans", sans-serif;
+  background-color: #f8f8ff;
 }
 
 .container {
@@ -450,6 +451,18 @@ input {
   max-width: 400px;
   padding: 50px 10px;
   margin: 0 auto;
+}
+
+.nav {
+  height: 50px;
+  display: flex;
+  align-items: center;
+}
+.navcontainer {
+  background-color: white;
+  -webkit-box-shadow: 0px 5px 5px -5px rgba(34, 60, 80, 0.6);
+  -moz-box-shadow: 0px 5px 5px -5px rgba(34, 60, 80, 0.6);
+  box-shadow: 0px 5px 5px -5px rgba(34, 60, 80, 0.6);
 }
 
 @media (max-width: 1025px) {
